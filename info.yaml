@@ -1,14 +1,14 @@
 # Tiny Tapeout project information
 project:
-  title:        ""      # Project title
-  author:       ""      # Your name
+  title:        "AES-128 Pipelined Encryption Core"      # Project title
+  author:       "third_chip"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
+  description:  "Fully unrolled 10-stage pipelined AES-128 encryption core with serial byte-addressed I/O interface"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
-  clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
+  clock_hz:     50000000       # Clock frequency in Hz (or 0 if not applicable)
 
   # How many tiles your design occupies? A single tile is about 340x160 uM.
-  tiles: "1x1"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 3x4 or 4x4
+  tiles: "4x2"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 3x4 or 4x4
 
   # Your top module name must start with "tt_um_". Make it unique by including your github username:
   top_module:  "tt_um_example"
@@ -17,39 +17,39 @@ project:
   # Source files must be in ./src and you must list each source file separately, one per line.
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
-    - "project.v"
+    - "tt_um_aes128_pipeline.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
-  ui[3]: ""
-  ui[4]: ""
-  ui[5]: ""
-  ui[6]: ""
-  ui[7]: ""
+  ui[0]: "Data / Command bit 0 (byte data during LOAD; CMD bit 0)"
+  ui[1]: "Data / Command bit 1"
+  ui[2]: "Data bit 2"
+  ui[3]: "Data bit 3"
+  ui[4]: "Data bit 4"
+  ui[5]: "Data bit 5"
+  ui[6]: "CMD[0]: Command select bit 0 (00=IDLE, 01=LOAD, 10=START, 11=READ)"
+  ui[7]: "CMD[1]: Command select bit 1"
 
   # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  uo[0]: "Cipher / status bit 0 (cipher byte LSB in READ mode; done in IDLE)"
+  uo[1]: "Cipher / status bit 1"
+  uo[2]: "Cipher / status bit 2"
+  uo[3]: "Cipher / status bit 3"
+  uo[4]: "Cipher / status bit 4"
+  uo[5]: "Cipher / status bit 5"
+  uo[6]: "Cipher / status bit 6"
+  uo[7]: "Cipher / status bit 7 (MSB)"
 
   # Bidirectional pins
-  uio[0]: ""
-  uio[1]: ""
-  uio[2]: ""
-  uio[3]: ""
-  uio[4]: ""
-  uio[5]: ""
-  uio[6]: ""
+  uio[0]: "done — asserts high 10 cycles after START; cipher output is valid"
+  uio[1]: "busy — high during the cycle START is pulsed"
+  uio[2]: "Byte index bit 0 (INPUT: selects key/plain byte 0-31 during LOAD; cipher byte 0-15 during READ)"
+  uio[3]: "Byte index bit 1"
+  uio[4]: "Byte index bit 2"
+  uio[5]: "Byte index bit 3 (MSB of READ index; also used as LOAD index bit 3)"
+  uio[6]: "Byte index bit 4 (LOAD only: distinguishes key bytes 0-15 vs plaintext bytes 16-31)"
   uio[7]: ""
 
 # Do not change!
